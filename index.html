@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Connect</title>
+
+<style>
+body {
+	overflow-y: scroll;
+}
+
+/*area styles*/
+#heading {
+    margin: auto;
+    width: 100%;
+    background-color: #F6F8FF;
+    font-weight: bold;
+    text-align: center;
+}
+
+#starred {
+    background-color: #F1EFFD;
+    margin-top: 0px;
+}
+
+#posts {
+    text-align: center;
+	font-size: 20px;
+}
+
+/*styles for elements in lists*/
+#post_list > li {
+	background-color: #F6F8FF;
+	margin-bottom: 20px;
+}
+#starred_list > li {
+	background-color: #F1EFFD;
+	margin-bottom: 20px;
+}
+
+/*styles for post contents*/
+li > div > p{
+	max-width: 250px;
+	text-align: left;
+	margin-top: 10px;
+}
+li > div > span {
+	margin: auto;
+	display: block;
+}
+li > div > input {
+	float: left;
+	margin-left: 50px;
+	margin-top: 5px;
+	width: 75%;
+}
+li > div > img {
+	/*float: left;*/
+	display: inline-block;
+	width: 300px;
+	height: 200px;
+}
+
+li > div > div > img {
+	float: left;
+	display: inline-block;
+	width: 25px;
+	height: 25px;
+	margin: auto;
+}
+li > div > div > img:hover {
+	cursor: pointer;
+}
+.buttons{
+	position: relative;
+	float: center;
+	text-align: center;
+	height: 50%;
+	margin-top:2px;
+}
+
+/*headings*/
+h1, h3 {
+    display: inline-block;
+}
+
+h4 {
+	display: block;
+}
+
+#starred_text, #post_text {
+	color: #0C0170;
+}
+
+/*scroll bar*/
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+}
+
+/*only applies to large screens*/
+@media only screen and (min-width: 770px){
+	li > div > img{
+		margin-top: 10px;
+	}
+	li > div > p{
+		min-height: 100px;
+		float: left;
+		margin-left: 50px;
+	}
+	#starred{
+		font-size: 20px;
+	}
+	/*icon styles*/
+#connect_icon {
+    width: 3%;
+    height: 3%;
+}
+#post_icon {
+	width: 3%;
+    height: 3%;
+}
+#starred_icon {
+    width: 7%;
+    height: 7%;
+}
+
+#posts, #starred {
+    float: left;
+    display: inline-block;
+}
+#starred {
+	width: 25%;
+	min-height: 900px;
+}
+#posts {
+	width: 60%;
+	margin: auto;
+}
+
+}
+
+/*only applies to small screens*/
+@media only screen and (max-width: 769px) {
+	#starred, #posts{
+		font-size: 17px;
+		width: 95%;
+		text-align: center;
+	}
+	#starred_list > li {
+		display: inline-block;
+		margin-left: 20px;
+	}
+	#starred_list {
+		
+		background-color: #F1EFFD;
+	}
+	/*icon styles*/
+#connect_icon {
+    width: 10%;
+    height: 10%;
+}
+#post_icon {
+	width: 6%;
+    height: 6%;
+}
+#starred_icon {
+    width: 7%;
+    height: 7%;
+	margin: auto;
+}
+#posts, #starred {
+    display: block;
+}
+#starred_text {
+	text-align: center;
+}
+
+li > div > p {
+	margin-left: auto;
+	margin-right: auto;
+}
+}
+</style>
+
+</head>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+
+<body onload="display_posts();display_starred();" onscroll="load_more_posts();">
+
+  <div id='heading'>
+    <img id="connect_icon" src="images/connect.png" >
+    <h1 id="heading_text">Connect</h1>
+  </div>
+
+  
+  <div id="starred">
+    <img id="starred_icon" src="images/yellow_star.gif" >
+    <h3 id="starred_text"><b>Starred friends</b></h3>
+	<ul id="starred_list" style="list-style-type:none">
+      
+    </ul>
+  </div>
+
+  <div id="posts">
+    <img id="post_icon" src="images/post.png" >
+    <h3 id="post_text"><b>Posts</b></h3>
+
+    <ul id="post_list" style="list-style-type:none">
+      
+    </ul>
+
+  </div>
+
+<script>
+
+var start = 4;
+var count = 0;
+function display_posts(){
+    var xmlhttp;
+    if (window.XMLHttpRequest){
+        xmlhttp = new XMLHttpRequest();
+    }
+    else{
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+
+    xmlhttp.onreadystatechange = function(){
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
+			document.getElementById("post_list").innerHTML = xmlhttp.responseText;
+            			
+        }
+    }
+                                  
+    xmlhttp.open("GET","handlePostDisplay.php?index_start=1&index_end=3", true);                                  
+    xmlhttp.send();
+}
+
+function load_more_posts(){
+	if (count<10){
+		count++;
+		return;
+	}
+	count = 0;
+	var xmlhttp;
+    if (window.XMLHttpRequest){
+        xmlhttp = new XMLHttpRequest();
+    }
+    else{
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+
+    xmlhttp.onreadystatechange = function(){
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
+			document.getElementById("post_list").innerHTML += xmlhttp.responseText;
+
+        }
+    }
+	var end = start + 2;
+    xmlhttp.open("GET","handlePostDisplay.php?index_start="+start+"&index_end="+end, true);                                  
+    xmlhttp.send();
+	start = start + 3;
+}
+
+function addComment(postid){
+	var xmlhttp;
+    if (window.XMLHttpRequest){
+        xmlhttp = new XMLHttpRequest();
+    }
+    else{
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+
+    xmlhttp.onreadystatechange = function(){
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
+			document.getElementById("commHolder"+postid).innerHTML = xmlhttp.responseText;
+
+        }
+    }
+    var content = document.getElementById("comm_post"+postid).value;
+    xmlhttp.open("GET","handleComments.php?postid="+postid+"&content="+content, true);                                  
+    xmlhttp.send();
+}
+
+function display_starred(){
+	var xmlhttp;
+    if (window.XMLHttpRequest){
+        xmlhttp = new XMLHttpRequest();
+    }
+    else{
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+
+    xmlhttp.onreadystatechange = function(){
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
+			document.getElementById("starred_list").innerHTML = xmlhttp.responseText;
+        }
+    }
+
+    xmlhttp.open("GET","handleFriendlistDisplay.php", true);                                  
+    xmlhttp.send();
+}
+
+function changeStar(elem,friendid){
+	var xmlhttp;
+    if (window.XMLHttpRequest){
+        xmlhttp = new XMLHttpRequest();
+    }
+    else{
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+
+    xmlhttp.onreadystatechange = function(){
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
+			document.getElementById("starred_list").innerHTML = xmlhttp.responseText;
+        }
+    }
+	
+	if (elem.getAttribute('src')=='images/grey_star.png'){
+		elem.src='images/yellow_star.gif';
+		var newval = 'Y';
+	}
+	else {
+		elem.src='images/grey_star.png';
+		var newval = 'N';
+	}
+	xmlhttp.open("GET","handleStarringFriend.php?friendid="+friendid+"&newval="+newval, true);
+    xmlhttp.send();
+}
+</script>
+
+</body>
+
+</html>
